@@ -6,12 +6,12 @@ struct Tree {
     int x;
     Tree* Left=NULL;
     Tree* Right=NULL;
-    Tree(int a) {
+    Tree(int a) { // Конструктор
         this->x = a;
         this->Left = NULL;
         this->Right = NULL;
     }
-    Tree(Tree* a) {
+    Tree(Tree* a) { // Конструктор
         this->x = a->x;
     }
 };
@@ -28,34 +28,38 @@ Tree* Init(Tree* T,int x) {
     return T;
 }
 
-void Show(Tree* T,int s) {
-    if (T != NULL) {
-        Show(T->Left,s+4);
-        for (int i = 0; i < s; i++)
-            cout << " ";
-        cout << T->x <<endl;
-        Show(T->Right,s+4);
-    }
-}
-
-void Shows(Tree* T) {
-    cout << "Вывод дерева:" << endl;
-    Show(T,0);
-    cout << endl;
-}
-
 Tree* CreateTree(Tree* T) {
     int n;
     cout << "Количество вершин: "; cin >> n;
     int x;
     for (int i = 0; i < n; i++) {
+        //cout << "x >> ";
+        //cin >> x;
         x = rand() % 20;
-        cout << "x >> " << x << endl;
         T=Init(T, x);
         //Shows(T);
     }
     return T;
 }
+
+
+void Show(Tree* T, int s) {
+    if (T != NULL) {
+        Show(T->Right, s + 4);
+        for (int i = 0; i < s; i++)
+            cout << " ";
+        cout << T->x << endl;
+        Show(T->Left, s + 4);
+    }
+}
+
+void Shows(Tree* T) {
+    cout << "\nВывод дерева:" << endl;
+    Show(T, 0);
+    cout << endl;
+}
+
+
 
 Tree* Mirror(Tree* A, Tree* B) {
     if (A != NULL) {
@@ -69,10 +73,21 @@ Tree* Mirror(Tree* A, Tree* B) {
     return B;
 }
 
-Tree* Mirror(Tree* A) {
-    Tree* B = NULL;
-    B=Mirror(A, B);
-    return B;
+int Height(Tree* T,int h, int n) { // Даем ссылку на первую вершину - T,
+    //h - высота дерева, n - нужная высота
+
+    if (T != NULL) {
+        if (h == n)
+            return 1;
+
+        int a = 0;
+        a += Height(T->Left, h + 1, n); // Переходим в левую ветвь и добавляем ему высоту
+        a += Height(T->Right, h + 1, n); // Так же в правую
+        return a;
+    }
+    else {
+        return 0;
+    }
 }
 
 int main()
@@ -85,4 +100,10 @@ int main()
     Tree* T2 = NULL;
     T2 = Mirror(T, T2);
     Shows(T2);
+    int n;
+    cout << "n >> "; cin >> n;
+    while (n != 0) {
+        cout << "\nКоличество вершин на уровне " << n << ": " << Height(T, 1, n) << endl;
+        cout << "n >> "; cin >> n;
+    }
 }
