@@ -1,7 +1,4 @@
-﻿// Binar Tree.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
-#include <iostream>
+﻿#include <iostream>
 #include <ctime>
 using namespace std;
 
@@ -10,9 +7,12 @@ struct Tree {
     Tree* Left=NULL;
     Tree* Right=NULL;
     Tree(int a) {
-        x = a;
-        Left = NULL;
-        Right = NULL;
+        this->x = a;
+        this->Left = NULL;
+        this->Right = NULL;
+    }
+    Tree(Tree* a) {
+        this->x = a->x;
     }
 };
 
@@ -28,42 +28,61 @@ Tree* Init(Tree* T,int x) {
     return T;
 }
 
-void Show(Tree* T) {
+void Show(Tree* T,int s) {
     if (T != NULL) {
-        Show(T->Left);
-        cout << T->x <<" | ";
-        Show(T->Right);
+        Show(T->Left,s+4);
+        for (int i = 0; i < s; i++)
+            cout << " ";
+        cout << T->x <<endl;
+        Show(T->Right,s+4);
     }
 }
 
 void Shows(Tree* T) {
     cout << "Вывод дерева:" << endl;
-    Show(T);
+    Show(T,0);
     cout << endl;
 }
 
-//int Height(Tree* T) {
-//    if (T != NULL) {
-//        int 
-//    }
-//    return 0;
-//}
-
-void CreateTree() {
+Tree* CreateTree(Tree* T) {
     int n;
     cout << "Количество вершин: "; cin >> n;
-    Tree* T=NULL;
     int x;
     for (int i = 0; i < n; i++) {
-        cout << "x >> "; x = rand() % 20;
+        x = rand() % 20;
+        cout << "x >> " << x << endl;
         T=Init(T, x);
-        Shows(T);
+        //Shows(T);
     }
+    return T;
+}
+
+Tree* Mirror(Tree* A, Tree* B) {
+    if (A != NULL) {
+        B = new Tree(A);
+        B->Left = Mirror(A->Right, B->Left);
+        B->Right = Mirror(A->Left, B->Right);
+    }
+    else {
+        return NULL;
+    }
+    return B;
+}
+
+Tree* Mirror(Tree* A) {
+    Tree* B = NULL;
+    B=Mirror(A, B);
+    return B;
 }
 
 int main()
 {
-    setlocale(LC_ALL, "rus");
+    setlocale(LC_ALL, "russia");
     srand(time(NULL));
-    CreateTree();
+    Tree* T = NULL;
+    T=CreateTree(T);
+    Shows(T);
+    Tree* T2 = NULL;
+    T2 = Mirror(T, T2);
+    Shows(T2);
 }
